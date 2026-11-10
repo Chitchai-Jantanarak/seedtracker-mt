@@ -1,0 +1,16 @@
+# observations.txt: one event per line, then the rnd() gap to the next event.
+#
+#   event LIST [survivor=N] [exclude=A,B]
+#       LIST      eliminations seen so far, 1..6, at most 5 (a partial prefix is fine)
+#       survivor  the room that was left, when known
+#       exclude   rooms known NOT to be the survivor
+#   gap N | gap A..B
+#       rnd() calls between the previous event's last draw and the next event's
+#       first draw. A missing gap line means gap 0.
+#
+# The last event is the one being predicted.
+event 5,1,2,6,3 survivor=4
+gap 0..40
+event 2,4,1,3,5
+gap 10..200
+event 3
