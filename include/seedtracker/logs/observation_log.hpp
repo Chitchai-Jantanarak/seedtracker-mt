@@ -3,7 +3,7 @@
 // reports and CSV metadata.
 //
 //   # comment
-//   event 5,1,2,6,3 survivor=4 exclude=2
+//   event 5,1,2,6,3
 //   gap 0..40            (or "gap 17" for an exact gap)
 //   event 2,4,1
 //   event 3              (partial prefix; the last event is the one predicted)

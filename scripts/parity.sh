@@ -142,7 +142,7 @@ if "$NEW" --backend opencl --seed-end 1 --calib 5,1 >/dev/null 2>&1; then
             for (i = 1; i <= NR; i++) {
                 if (line[i] ~ /^gap/) { print "gap 0..40"; continue }
                 if (i == NR) {
-                    sub(/ survivor=.*/, "", line[i]); split(substr(line[i], 7), v, ",")
+                    split(substr(line[i], 7), v, ",")
                     print "event " v[1] "," v[2]; continue
                 }
                 print line[i]

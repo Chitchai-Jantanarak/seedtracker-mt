@@ -41,7 +41,6 @@ std::vector<Observation> simulate_chain(const Options& opt, uint32_t seed, uint6
         }
         Observation o;
         for (int i = 0; i < 5; ++i) o.rule.prefix.push_back(ev.elim[i]);
-        o.rule.survivor = ev.survivor;
         if (k > 0) o.gap_min = o.gap_max = gaps[k - 1];
         out.push_back(std::move(o));
         pos += ev.draws_used;

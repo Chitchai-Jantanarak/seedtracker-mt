@@ -118,7 +118,7 @@ Full detail on every mapping, pick rule and model: [docs/CRITERIA.md](docs/CRITE
 Example input, [`examples/observations.txt`](examples/observations.txt):
 
 ```text
-event 5,1,2,6,3 survivor=4
+event 5,1,2,6,3
 gap 0..40
 event 2,4,1,3,5
 gap 10..200
@@ -128,8 +128,8 @@ event 3
 | Line | Example input | Status | Meaning |
 | --- | --- | --- | --- |
 | `event LIST` | `event 5,1,2` | **REQUIRED** | values seen, `1`..`6`, up to five; a prefix is fine |
-| `survivor=N` | `survivor=4` | OPTIONAL | the one left, when known |
-| `exclude=A,B` | `exclude=2,6` | OPTIONAL | known NOT to be the survivor |
+| `survivor=N` | `survivor=4` | OPTIONAL | the one left, when known; only filters a partial list |
+| `exclude=A,B` | `exclude=2,6` | OPTIONAL | known NOT to be the survivor; only filters a partial list |
 | `gap N` / `gap A..B` | `gap 0..40` | OPTIONAL | `rnd()` calls before the next event; no line = 0 |
 | `# ...` | `# round 2` | OPTIONAL | comment |
 
