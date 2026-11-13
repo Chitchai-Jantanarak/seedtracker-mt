@@ -15,6 +15,7 @@ inline int sim_model(Model m) {
         case Model::SwapRemove: return SF_MODEL_SWAPREMOVE;
         case Model::FisherYates: return SF_MODEL_SHUFFLE;
         case Model::IndependentRoll: return SF_MODEL_ROLL;
+        case Model::Custom: return SF_MODEL_CUSTOM;
     }
     return SF_MODEL_REMAINING;
 }

@@ -11,7 +11,9 @@ const PostRule& predicted_rule(const Options& opt) { return opt.observations.bac
 std::size_t predicted_prefix_len(const Options& opt) { return predicted_rule(opt).prefix.size(); }
 
 uint64_t max_slots_per_event(const Options& opt) {
-    const uint64_t picks = opt.model == Model::RerollUnique ? SF_REROLL_MAX_PICKS : 5;
+    const uint64_t picks = opt.model == Model::RerollUnique ? SF_REROLL_MAX_PICKS
+                         : opt.model == Model::Custom     ? SF_CUSTOM_MAX_PICKS
+                                                          : 5;
     // A dist-* pick may read several engine words (rejected draws), up to the cap.
     const uint64_t words = pick_uses_raw_words(opt.pick_rule) ? SF_DIST_MAX_WORDS : 1;
     return picks * words * opt.rng_step;

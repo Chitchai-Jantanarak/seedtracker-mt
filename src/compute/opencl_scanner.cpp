@@ -106,7 +106,11 @@ uint64_t gpu_window(const Options& opt) {
     if (full == 0) return 0;
     // Slots one event realistically uses: 5 picks, or about 9 on average (24 at
     // the far tail) for reroll. The CPU window assumes the worst case instead.
-    const uint64_t typical_event = (opt.model == Model::RerollUnique ? 24 : 5) * opt.rng_step;
+    // A custom model is sized at its declared maximum (SF_CUSTOM_MAX_PICKS).
+    const uint64_t typical_pick = opt.model == Model::RerollUnique ? 24
+                                  : opt.model == Model::Custom     ? SF_CUSTOM_MAX_PICKS
+                                                                   : 5;
+    const uint64_t typical_event = typical_pick * opt.rng_step;
     uint64_t w = opt.offset_end;
     for (std::size_t i = 1; i < opt.observations.size(); ++i) w += opt.observations[i].gap_max;
     w += opt.observations.size() * typical_event;
@@ -232,13 +236,22 @@ std::string build_prelude(const Options& opt, Mapping gpu_mapping) {
     return o.str();
 }
 
-// prelude + sim_core.h + scan.cl, with scan.cl's #include line replaced by the header text.
+// prelude + sim_core.h + scan.cl. scan.cl's #include line is replaced by the sim_core.h text,
+// and sim_core.h's own custom_rule.h include line by the custom_rule.h text.
 std::string build_source(const Options& opt, Mapping gpu_mapping) {
+    std::string sim_core = kSimCoreSource;
+    const std::string custom_line = "#include \"seedtracker/core/custom_rule.h\"";
+    const std::size_t custom_at = sim_core.find(custom_line);
+    if (custom_at == std::string::npos) {
+        throw std::runtime_error("sim_core.h lost its custom_rule.h include line");
+    }
+    sim_core.replace(custom_at, custom_line.size(), kCustomRuleSource);
+
     std::string kernel = kScanKernelSource;
     const std::string include_line = "#include \"seedtracker/core/sim_core.h\"";
     const std::size_t at = kernel.find(include_line);
     if (at == std::string::npos) throw std::runtime_error("scan.cl lost its sim_core.h include line");
-    kernel.replace(at, include_line.size(), kSimCoreSource);
+    kernel.replace(at, include_line.size(), sim_core);
     return build_prelude(opt, gpu_mapping) + kernel;
 }
 

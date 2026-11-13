@@ -33,13 +33,16 @@ set(SEEDTRACKER_SOURCES
 if(SEEDTRACKER_OPENCL)
   list(APPEND SEEDTRACKER_SOURCES src/compute/opencl_scanner.cpp)
 
-  # Embed the kernel: sim_core.h and scan.cl become string literals in a
-  # generated header, so the exe needs no files at run time. Editing either
-  # source re-runs configure and regenerates the header.
+  # Embed the kernel: sim_core.h, custom_rule.h and scan.cl become string
+  # literals in a generated header, so the exe needs no files at run time.
+  # Editing any of them re-runs configure and regenerates the header.
   set(SF_SIM_CORE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/include/seedtracker/core/sim_core.h")
+  set(SF_CUSTOM_RULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/include/seedtracker/core/custom_rule.h")
   set(SF_SCAN_CL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/compute/kernels/scan.cl")
-  set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${SF_SIM_CORE_PATH}" "${SF_SCAN_CL_PATH}")
+  set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+               "${SF_SIM_CORE_PATH}" "${SF_CUSTOM_RULE_PATH}" "${SF_SCAN_CL_PATH}")
   file(READ "${SF_SIM_CORE_PATH}" SF_SIM_CORE_SOURCE)
+  file(READ "${SF_CUSTOM_RULE_PATH}" SF_CUSTOM_RULE_SOURCE)
   file(READ "${SF_SCAN_CL_PATH}" SF_SCAN_CL_SOURCE)
   configure_file(src/compute/kernels/kernel_source.hpp.in
                  "${CMAKE_CURRENT_BINARY_DIR}/generated/seedtracker/kernel_source.hpp" @ONLY)

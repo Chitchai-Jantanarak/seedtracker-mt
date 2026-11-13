@@ -75,6 +75,7 @@ Model parse_model(const std::string& s) {
     if (s == "swapremove") return Model::SwapRemove;
     if (s == "shuffle") return Model::FisherYates;
     if (s == "roll") return Model::IndependentRoll;
+    if (s == "custom") return Model::Custom;
     throw std::runtime_error("unknown model: " + s);
 }
 
@@ -84,6 +85,7 @@ PickRule parse_pick_rule(const std::string& s) {
     if (s == "fixed-scale") return PickRule::FixedScale;
     if (s == "dist-gcc10") return PickRule::DistGcc10;
     if (s == "dist-gcc11") return PickRule::DistGcc11;
+    if (s == "custom") return PickRule::Custom;
     throw std::runtime_error("unknown pick rule: " + s);
 }
 
@@ -195,11 +197,13 @@ void usage(std::ostream& os, const char* argv0) {
         "  --calib 5,1,2        observed elimination prefix (one event)\n"
         "  --obs FILE           several logged events with unknown rnd() gaps (see README)\n"
         "  --depth N            aggregate N future eliminations (default 3)\n"
-        "  --model remaining|reroll|swapremove|shuffle|roll\n"
+        "  --model remaining|reroll|swapremove|shuffle|roll|custom\n"
         "                       roll: independent rand() % 6 + 1 values\n"
+        "                       custom: edit include/seedtracker/core/custom_rule.h and rebuild\n"
         "  --mapping std|high31|low31|reject31\n"
-        "  --pick direct|fixed-mod|fixed-scale|dist-gcc10|dist-gcc11\n"
+        "  --pick direct|fixed-mod|fixed-scale|dist-gcc10|dist-gcc11|custom\n"
         "                       how each random draw maps to available choices;\n"
+        "                       custom: edit include/seedtracker/core/custom_rule.h and rebuild\n"
         "                       dist-gcc10 / dist-gcc11 emulate std::uniform_int_distribution(0,n-1)\n"
         "                       from libstdc++ 10 (rejection) / 11 (Lemire) on RAW MT words\n"
         "                       (--mapping ignored; offsets and gaps then count engine words)\n"
@@ -216,7 +220,9 @@ void usage(std::ostream& os, const char* argv0) {
         "  # Scan a small shard after observing 5,1:\n"
         "  " << argv0 << " --seed-begin 0 --seed-end 10000000 --offset-begin 0 --offset-end 1 \\\n"
         "      --model remaining --mapping std --pick direct --calib 5,1 --depth 3 --csv-out cand_51.csv\n\n"
-        "  # Same elimination model, but assume rand(1,10000) then modulo remaining choices:\n"
+        "  # Same elimination model, but a fixed value domain 1..10000; the value's offset from\n"
+        "  # --base-min is taken modulo remaining choices (rand(min,max) % n with an unaligned\n"
+        "  # min needs --pick custom):\n"
         "  " << argv0 << " --seed-begin 0 --seed-end 10000000 --offset-begin 0 --offset-end 1 \\\n"
         "      --model remaining --mapping std --pick fixed-mod --base-min 1 --base-max 10000 \\\n"
         "      --calib 4,3,6,2,5 --depth 3\n\n"

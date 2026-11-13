@@ -44,12 +44,16 @@ libstdc++ release: 10
 | Value | Index is |
 | --- | --- |
 | `direct` | `rnd() % choices` |
-| `fixed-mod` | `rnd()` reduced into a fixed domain (`--base-min`..`--base-max`, stepping by `--value-step`), then that value `% choices` |
+| `fixed-mod` | `rnd()` reduced into a fixed domain (`--base-min`..`--base-max`, stepping by `--value-step`); the value's offset from `--base-min` is then taken `% choices` (the offset, not the value itself: `--base-min` only sets the domain size) |
 | `fixed-scale` | Same fixed domain, but the value's position is scaled into equal buckets, one per choice |
 | `dist-gcc10` | `std::uniform_int_distribution<int>(0, choices-1)` as libstdc++ 10 implements it: redraw a raw word until it is below `choices * (0xFFFFFFFF / choices)`, then divide |
 | `dist-gcc11` | The same distribution as libstdc++ 11 implements it (Lemire's method): `product = (u64)word * choices`, redraw while the low 32 bits are below `(-choices) % choices`, index is `product >> 32` |
+| `custom` | User-defined in `include/seedtracker/core/custom_rule.h`. The default stub behaves like `direct`. See [Custom rules](#custom-rules). |
 
 The fixed-domain defaults are `--base-min 1 --base-max 10000 --value-step 1`, which models a call like `rnd_value(1, 10000)`.
+
+> [!NOTE]
+> `fixed-mod` takes `(rnd() % domain_count) * value_step`, then `% choices`. `--base-min` is not added before the modulo; it only sets the domain size. This is inherited behaviour from the legacy tool and is kept on purpose. A target that does `rand(min, max) % choices` with `min` not a multiple of `choices` needs `--pick custom` (a ready example is commented out in `custom_rule.h`).
 
 > [!CAUTION]
 > `dist-gcc10` and `dist-gcc11` read **raw MT words**, NOT `rnd()` values. `--mapping` is ignored (a warning is printed), and offsets, gaps and `--rng-step` count engine words. Every word read, including a rejected one, advances by `--rng-step`. More than 64 words in one pick marks the event invalid.
@@ -69,6 +73,27 @@ The fixed-domain defaults are `--base-min 1 --base-max 10000 --value-step 1`, wh
 | `reroll` | Pick from all six; redraw until the choice is still open. Capped at 64 picks per event, after which the event counts as invalid. |
 | `shuffle` | Fisher-Yates shuffle of all six. The first five are the order. |
 | `roll` | Independent picks from all six (`rand() % 6 + 1`); values repeat, no survivor. Log a long run as 5-value `event` lines with no `gap` between them. |
+| `custom` | User-defined in `include/seedtracker/core/custom_rule.h`. The default stub behaves like `remaining`. See [Custom rules](#custom-rules). |
+
+---
+
+## Custom rules
+
+`--pick custom` and `--model custom` run code you write in `include/seedtracker/core/custom_rule.h`. Edit the file and rebuild; nothing else needs changing. The CPU scan and the GPU kernel both compile that file (the GPU build embeds its text), so both backends use your rule.
+
+- `sf_custom_pick` turns one draw into an index in `[0, choices)`. The default behaves like `direct`.
+- `sf_custom_event` produces one whole event (five eliminations and a survivor). The default behaves like `remaining`. It can call `sf_pick`, which uses `sf_custom_pick` when `--pick custom` is set, so the two compose.
+
+Rules for the code:
+
+1. Take random draws only through the draw buffer: `buf[*pos]` in a pick, `sf_pick` in an event.
+2. Before reading `buf[*pos]`, check `*pos >= W` and, if so, set `*ok = 0` and return 0. After reading, advance `*pos += p->rng_step`.
+3. Cap every loop, and when a cap is hit leave `out->valid` unset. No recursion, heap, `double` or global state: the file is plain C that must also compile as OpenCL C 1.2.
+4. Fill `sf_event` with rooms in 1..6 (`elim[5]`, `survivor`), set `valid = 1` and `draws_used`. Put constants in the file as `#define SF_CUSTOM_...`; there are no run-time arguments for them.
+5. Set `SF_CUSTOM_MAX_PICKS` to the most picks one custom event can make (default 5). Each seed's draw window is sized from it, so a value that is too low drops valid events as invalid without any error.
+6. Set `SF_CUSTOM_ELIMINATES` to 0 if the custom model is roll-like (values repeat, no survivor). It is 1 by default.
+
+To verify a change: run the same scan with `--backend cpu` and `--backend opencl` (use a calibration that leaves few candidates, such as `--seed-end 16777216 --calib 5,1 --depth 2`) and compare the sorted CSV rows and the `matching candidates` line. Also check the events against a plain C++ reference of the target's logic (`--emit-events` prints a synthetic log for one seed).
 
 ---
 

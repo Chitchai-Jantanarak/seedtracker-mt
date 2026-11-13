@@ -24,7 +24,8 @@
  *
  * Build: the host (opencl_scanner.cpp) concatenates
  *   1. a prelude that #defines the SF_K_* constants and array initialisers below,
- *   2. sim_core.h (replacing the #include line below),
+ *   2. sim_core.h (replacing the #include line below), with custom_rule.h spliced
+ *      into sim_core.h in place of its own #include line,
  *   3. this file.
  *
  * Prelude symbols:

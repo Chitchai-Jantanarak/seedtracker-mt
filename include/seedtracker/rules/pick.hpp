@@ -13,6 +13,7 @@ inline int sim_pick_rule(PickRule p) {
         case PickRule::FixedScale: return SF_PICK_FIXED_SCALE;
         case PickRule::DistGcc10: return SF_PICK_DIST_GCC10;
         case PickRule::DistGcc11: return SF_PICK_DIST_GCC11;
+        case PickRule::Custom: return SF_PICK_CUSTOM;
     }
     return SF_PICK_DIRECT;
 }

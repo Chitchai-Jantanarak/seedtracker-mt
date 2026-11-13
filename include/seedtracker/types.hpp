@@ -14,15 +14,19 @@ enum class Mapping { StdDistribution, High31, Low31, Reject31, Raw };
 // Which engine runs the scan. Auto picks OpenCL when it is built in, a GPU
 // initialises and the options fit; otherwise the CPU thread pool.
 enum class Backend { Auto, OpenCL, Cpu };
-enum class Model { RemainingErase, RerollUnique, SwapRemove, FisherYates, IndependentRoll };
-// Every model except roll eliminates five distinct rooms and leaves one survivor.
-inline bool model_eliminates(Model m) { return m != Model::IndependentRoll; }
+enum class Model { RemainingErase, RerollUnique, SwapRemove, FisherYates, IndependentRoll, Custom };
+// Custom follows SF_CUSTOM_ELIMINATES in core/custom_rule.h.
+inline bool model_eliminates(Model m) {
+    if (m == Model::Custom) return SF_CUSTOM_ELIMINATES != 0;
+    return m != Model::IndependentRoll;
+}
 enum class PickRule {
     DirectRemaining,  // script_rand(0, choices-1)
-    FixedModulo,      // script_rand(base_min, base_max), then modulo choices
+    FixedModulo,      // fixed domain base_min..base_max: (value - base_min) taken modulo choices
     FixedScale,       // script_rand(base_min, base_max), then scale into choices buckets
     DistGcc10,        // std::uniform_int_distribution(0, choices-1) as in libstdc++ 10, on raw MT words
     DistGcc11,        // same as libstdc++ 11 (Lemire's method), on raw MT words
+    Custom,           // user-defined, see core/custom_rule.h
 };
 
 inline const char* mapping_name(Mapping m) {
@@ -52,6 +56,7 @@ inline const char* model_name(Model m) {
         case Model::SwapRemove: return "swapremove";
         case Model::FisherYates: return "shuffle";
         case Model::IndependentRoll: return "roll";
+        case Model::Custom: return "custom";
     }
     return "?";
 }
@@ -63,6 +68,7 @@ inline const char* pick_rule_name(PickRule p) {
         case PickRule::FixedScale: return "fixed-scale";
         case PickRule::DistGcc10: return "dist-gcc10";
         case PickRule::DistGcc11: return "dist-gcc11";
+        case PickRule::Custom: return "custom";
     }
     return "?";
 }

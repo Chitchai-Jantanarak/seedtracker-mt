@@ -46,12 +46,14 @@ typedef ulong uint64_t;
 #define SF_PICK_DIST_GCC10 3  /* std::uniform_int_distribution(0, choices-1) as in libstdc++ 10;
                                  reads RAW engine words (use with SF_MAP_RAW)             */
 #define SF_PICK_DIST_GCC11 4  /* same distribution as libstdc++ 11 (Lemire's method); RAW words */
+#define SF_PICK_CUSTOM 5      /* user-defined, see core/custom_rule.h (sf_custom_pick)   */
 
 #define SF_MODEL_REMAINING 0
 #define SF_MODEL_REROLL 1
 #define SF_MODEL_SWAPREMOVE 2
 #define SF_MODEL_SHUFFLE 3
 #define SF_MODEL_ROLL 4 /* independent picks of 1..6, no survivor */
+#define SF_MODEL_CUSTOM 5 /* user-defined, see core/custom_rule.h (sf_custom_event) */
 
 #define SF_REROLL_MAX_PICKS 64u /* reroll model: more picks than this marks the event invalid */
 #define SF_DIST_MAX_WORDS 64u   /* dist picks: more rejected engine words than this marks the event invalid */
@@ -217,6 +219,13 @@ typedef struct {
     uint32_t draws_used; /* buffer slots consumed, including skipped rng_step slots */
 } sf_event;
 
+/* Declared first so custom_rule.h (user code) can call it. */
+SF_INLINE int sf_pick(SF_PRIVATE const uint32_t* buf, uint32_t W, SF_PRIVATE uint32_t* pos,
+                      SF_PRIVATE const sf_params* p, int choices, SF_PRIVATE int* ok);
+
+/* User-defined pick and model. The GPU build replaces this include line by the file's text. */
+#include "seedtracker/core/custom_rule.h"
+
 /*
  * One pick: reads buf[*pos], advances *pos by rng_step, returns an index in
  * [0, choices). choices <= 1 consumes nothing. Reading at or past W clears *ok.
@@ -227,6 +236,7 @@ SF_INLINE int sf_pick(SF_PRIVATE const uint32_t* buf, uint32_t W, SF_PRIVATE uin
     uint32_t raw;
     uint32_t ordinal;
     if (choices <= 1) return 0;
+    if (p->pick == SF_PICK_CUSTOM) return sf_custom_pick(buf, W, pos, p, choices, ok);
     if (p->pick == SF_PICK_DIST_GCC10) {
         /*
          * libstdc++ 10 uniform_int_distribution downscaling, urngrange = 2^32-1:
@@ -320,6 +330,10 @@ SF_INLINE void sf_step_event(SF_PRIVATE const uint32_t* buf, uint32_t W, uint32_
     out->draws_used = 0u;
     for (i = 0; i < 5; ++i) out->elim[i] = 0;
 
+    if (p->model == SF_MODEL_CUSTOM) {
+        sf_custom_event(buf, W, pos, p, out); /* sets every field of *out itself */
+        return;
+    }
     if (p->model == SF_MODEL_REMAINING || p->model == SF_MODEL_SWAPREMOVE) {
         int rooms[6];
         int n = 6;
