@@ -1,3 +1,4 @@
+plan/
 build/
 *.csv
 third_party/gcc11/

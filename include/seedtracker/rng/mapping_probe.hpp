@@ -5,9 +5,9 @@
 #include <optional>
 #include <string>
 
-#include "seedfinder/types.hpp"
+#include "seedtracker/types.hpp"
 
-namespace seedfinder {
+namespace seedtracker {
 
 struct MappingProbeResult {
     std::optional<Mapping> match;  // the explicit mapping std equals on this build, if any
@@ -17,4 +17,4 @@ struct MappingProbeResult {
 // Draws `draws_per_seed` values for each probe seed (default 100000).
 MappingProbeResult probe_std_mapping(unsigned draws_per_seed = 100000);
 
-}  // namespace seedfinder
+}  // namespace seedtracker

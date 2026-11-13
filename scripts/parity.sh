@@ -2,7 +2,7 @@
 # Legacy parity: run the legacy binary and the new one with the same flags and
 # compare the surviving rows and the "matching candidates" count.
 #
-#   scripts/parity.sh [legacy.exe] [seedfinder.exe]
+#   scripts/parity.sh [legacy.exe] [seedtracker.exe]
 #
 # Section 1 (legacy): the legacy binary against the new one with `--backend cpu`.
 # Section 2 (gpu):    the new binary with `--backend opencl` against `--backend cpu`
@@ -10,8 +10,8 @@
 #                     with a message when the binary has no OpenCL or no GPU
 #                     initialises. GPU_SEED_END (default 16777216) sets its seed range.
 #
-# Defaults: build/legacy.exe and build/mingw-release-opencl/seedfinder.exe (or
-# build/mingw-release/seedfinder.exe when the OpenCL build is absent), relative
+# Defaults: build/legacy.exe and build/mingw-release-opencl/seedtracker.exe (or
+# build/mingw-release/seedtracker.exe when the OpenCL build is absent), relative
 # to the repo root. Build the legacy binary first from the original single-file
 # tool, which is not part of this repo:
 #   g++ -O2 -std=c++17 path/to/sakray_mt_candidate_filter_latest.cpp -o build/legacy.exe
@@ -23,10 +23,10 @@
 set -u
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 LEGACY="${1:-$ROOT/build/legacy.exe}"
-if [ -x "$ROOT/build/mingw-release-opencl/seedfinder.exe" ]; then
-    DEFAULT_NEW="$ROOT/build/mingw-release-opencl/seedfinder.exe"
+if [ -x "$ROOT/build/mingw-release-opencl/seedtracker.exe" ]; then
+    DEFAULT_NEW="$ROOT/build/mingw-release-opencl/seedtracker.exe"
 else
-    DEFAULT_NEW="$ROOT/build/mingw-release/seedfinder.exe"
+    DEFAULT_NEW="$ROOT/build/mingw-release/seedtracker.exe"
 fi
 NEW="${2:-$DEFAULT_NEW}"
 GPU_SEED_END="${GPU_SEED_END:-16777216}"

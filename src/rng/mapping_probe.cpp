@@ -1,12 +1,12 @@
-#include "seedfinder/rng/mapping_probe.hpp"
+#include "seedtracker/rng/mapping_probe.hpp"
 
 #include <array>
 #include <vector>
 
-#include "seedfinder/core/sim_core.h"
-#include "seedfinder/rng/engine.hpp"
+#include "seedtracker/core/sim_core.h"
+#include "seedtracker/rng/engine.hpp"
 
-namespace seedfinder {
+namespace seedtracker {
 
 MappingProbeResult probe_std_mapping(unsigned draws_per_seed) {
     const std::array<Mapping, 3> candidates = {Mapping::High31, Mapping::Low31, Mapping::Reject31};
@@ -40,4 +40,4 @@ MappingProbeResult probe_std_mapping(unsigned draws_per_seed) {
     return r;
 }
 
-}  // namespace seedfinder
+}  // namespace seedtracker

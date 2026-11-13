@@ -24,7 +24,7 @@
       "name": "mingw-release-opencl",
       "inherits": "mingw-release",
       "cacheVariables": {
-        "SEEDFINDER_OPENCL": "ON"
+        "SEEDTRACKER_OPENCL": "ON"
       }
     },
     {

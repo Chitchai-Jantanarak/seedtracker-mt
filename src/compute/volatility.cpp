@@ -1,6 +1,6 @@
-#include "seedfinder/compute/volatility.hpp"
+#include "seedtracker/compute/volatility.hpp"
 
-namespace seedfinder {
+namespace seedtracker {
 
 VolatilityScore score_predictions(std::vector<uint32_t>& keys) {
     VolatilityScore s;
@@ -19,4 +19,4 @@ VolatilityScore score_predictions(std::vector<uint32_t>& keys) {
     return s;
 }
 
-}  // namespace seedfinder
+}  // namespace seedtracker

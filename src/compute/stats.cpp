@@ -1,10 +1,10 @@
-#include "seedfinder/compute/stats.hpp"
+#include "seedtracker/compute/stats.hpp"
 
 #include <algorithm>
 
-#include "seedfinder/compute/volatility.hpp"
+#include "seedtracker/compute/volatility.hpp"
 
-namespace seedfinder {
+namespace seedtracker {
 
 void init_stats(Stats& s, const Options& opt) {
     s = Stats{};
@@ -71,4 +71,4 @@ void stats_finalize(Stats& s, const Options& opt) {
     if (s.lowest_volatility.size() > opt.examples) s.lowest_volatility.resize(opt.examples);
 }
 
-}  // namespace seedfinder
+}  // namespace seedtracker

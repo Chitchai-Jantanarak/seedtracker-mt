@@ -1,11 +1,11 @@
 #pragma once
 // IScanBackend: a way of running the seed scan. The CPU thread pool is the only
 // implementation so far; an OpenCL backend is planned behind the same interface.
-#include "seedfinder/compute/stats.hpp"
-#include "seedfinder/config/options.hpp"
-#include "seedfinder/export/csv.hpp"
+#include "seedtracker/compute/stats.hpp"
+#include "seedtracker/config/options.hpp"
+#include "seedtracker/export/csv.hpp"
 
-namespace seedfinder {
+namespace seedtracker {
 
 class IScanBackend {
 public:
@@ -16,4 +16,4 @@ public:
     virtual Stats scan(const Options& opt, CsvWriter* csv) = 0;
 };
 
-}  // namespace seedfinder
+}  // namespace seedtracker

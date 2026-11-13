@@ -11,9 +11,9 @@
 #include <string>
 #include <vector>
 
-#include "seedfinder/types.hpp"
+#include "seedtracker/types.hpp"
 
-namespace seedfinder {
+namespace seedtracker {
 
 // Parses "5,1,2" into rooms. Throws std::runtime_error naming `what` on bad input.
 std::vector<int> parse_room_list(const std::string& s, const std::string& what, std::size_t max_len);
@@ -30,4 +30,4 @@ std::string format_observation_log(const std::vector<Observation>& obs);
 // "5,1+s4|g0..40|2,4,1" form without spaces.
 std::string summarize_observations(const std::vector<Observation>& obs);
 
-}  // namespace seedfinder
+}  // namespace seedtracker

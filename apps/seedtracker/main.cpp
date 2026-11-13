@@ -1,4 +1,4 @@
-// seedfinder: offline MT19937 candidate scanner for a Sakray/rAthena-style RNG chain.
+// seedtracker: offline MT19937 candidate scanner for a Sakray/rAthena-style RNG chain.
 //
 //   std::mt19937 -> rnd() -> pick rule -> elimination model
 //
@@ -12,17 +12,17 @@
 #include <iostream>
 #include <memory>
 
-#include "seedfinder/compute/backend_select.hpp"
-#include "seedfinder/compute/chain.hpp"
-#include "seedfinder/config/cli.hpp"
-#include "seedfinder/export/csv.hpp"
-#include "seedfinder/export/report.hpp"
-#include "seedfinder/logs/observation_log.hpp"
-#include "seedfinder/rng/mapping_probe.hpp"
+#include "seedtracker/compute/backend_select.hpp"
+#include "seedtracker/compute/chain.hpp"
+#include "seedtracker/config/cli.hpp"
+#include "seedtracker/export/csv.hpp"
+#include "seedtracker/export/report.hpp"
+#include "seedtracker/logs/observation_log.hpp"
+#include "seedtracker/rng/mapping_probe.hpp"
 
 namespace {
 
-using namespace seedfinder;
+using namespace seedtracker;
 
 // True when both rows belong to the same (seed, offset, earlier gaps) group,
 // i.e. they differ at most in the last gap. Single-event rows are their own group.

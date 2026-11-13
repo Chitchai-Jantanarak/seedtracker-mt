@@ -1,11 +1,11 @@
-#include "seedfinder/compute/chain.hpp"
+#include "seedtracker/compute/chain.hpp"
 
 #include <stdexcept>
 #include <utility>
 
-#include "seedfinder/rng/draw_buffer.hpp"
+#include "seedtracker/rng/draw_buffer.hpp"
 
-namespace seedfinder {
+namespace seedtracker {
 
 ChainMatcher::ChainMatcher(const Options& opt)
     : params_(make_sim_params(opt)),
@@ -49,4 +49,4 @@ std::vector<Observation> simulate_chain(const Options& opt, uint32_t seed, uint6
     return out;
 }
 
-}  // namespace seedfinder
+}  // namespace seedtracker

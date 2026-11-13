@@ -1,4 +1,4 @@
-#include "seedfinder/export/report.hpp"
+#include "seedtracker/export/report.hpp"
 
 #include <algorithm>
 #include <iomanip>
@@ -7,10 +7,10 @@
 #include <utility>
 #include <vector>
 
-#include "seedfinder/compute/volatility.hpp"
-#include "seedfinder/logs/observation_log.hpp"
+#include "seedtracker/compute/volatility.hpp"
+#include "seedtracker/logs/observation_log.hpp"
 
-namespace seedfinder {
+namespace seedtracker {
 
 namespace {
 
@@ -155,4 +155,4 @@ void print_stats(std::ostream& os, const Stats& s, const Options& opt) {
     }
 }
 
-}  // namespace seedfinder
+}  // namespace seedtracker

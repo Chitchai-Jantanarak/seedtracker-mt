@@ -6,10 +6,10 @@
 #include <string>
 #include <vector>
 
-#include "seedfinder/compute/backend.hpp"
-#include "seedfinder/config/options.hpp"
+#include "seedtracker/compute/backend.hpp"
+#include "seedtracker/config/options.hpp"
 
-namespace seedfinder {
+namespace seedtracker {
 
 struct BackendSelection {
     std::unique_ptr<IScanBackend> backend;
@@ -22,4 +22,4 @@ struct BackendSelection {
 // be honoured. Requires validate().
 BackendSelection select_backend(Options& opt);
 
-}  // namespace seedfinder
+}  // namespace seedtracker

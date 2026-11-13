@@ -1,4 +1,4 @@
-# seedfinder
+# seedtracker
 
 Offline scanner for a Sakray/rAthena-style RNG chain:
 
@@ -17,10 +17,10 @@ The default build has the GPU backend:
 ```
 cmake --preset mingw-release-opencl
 cmake --build --preset mingw-release-opencl
-build/mingw-release-opencl/seedfinder.exe --help
+build/mingw-release-opencl/seedtracker.exe --help
 ```
 
-`mingw-release` is the CPU-only build (`SEEDFINDER_OPENCL=OFF`), and `mingw-debug` is `-O0 -g`. None of the builds needs network. The OpenCL build needs no OpenCL driver at build time: the Khronos OpenCL headers are vendored in `third_party/OpenCL-Headers` (Apache-2.0, commit `82f6031`), and the OpenCL runtime (`OpenCL.dll`, installed with the GPU driver) is loaded when the program starts instead of being linked. A machine without an OpenCL driver therefore still runs the exe and falls back to the CPU.
+`mingw-release` is the CPU-only build (`SEEDTRACKER_OPENCL=OFF`), and `mingw-debug` is `-O0 -g`. None of the builds needs network. The OpenCL build needs no OpenCL driver at build time: the Khronos OpenCL headers are vendored in `third_party/OpenCL-Headers` (Apache-2.0, commit `82f6031`), and the OpenCL runtime (`OpenCL.dll`, installed with the GPU driver) is loaded when the program starts instead of being linked. A machine without an OpenCL driver therefore still runs the exe and falls back to the CPU.
 
 ## Backends
 
@@ -40,7 +40,7 @@ The report starts with the backend actually used, for example `backend    : open
 
 | Path | Concept |
 |---|---|
-| `include/seedfinder/core/sim_core.h` | All random logic: MT19937 (on-demand twist), mappings, pick rules, models. C++17 and OpenCL C 1.2 compatible, no STL. |
+| `include/seedtracker/core/sim_core.h` | All random logic: MT19937 (on-demand twist), mappings, pick rules, models. C++17 and OpenCL C 1.2 compatible, no STL. |
 | `config/options`, `config/cli` | `Options` (the setter), `validate()` warnings, flag parsing, `--help` |
 | `rng/engine`, `rng/draw_buffer` | `std::mt19937` reference engine (for `--mapping std`); per-seed buffer of `rnd()` outputs |
 | `rules/pick`, `rules/model` | C++ wrappers that map options onto `sim_core.h` |
@@ -52,7 +52,7 @@ The report starts with the backend actually used, for example `backend    : open
 | `compute/opencl_scanner`, `compute/kernels/scan.cl` | GPU prefilter (OpenCL host code and kernel); the kernel source and `sim_core.h` are embedded into the exe at build time |
 | `compute/backend_select` | Picks the backend from `--backend` and what the build and machine support |
 | `export/csv`, `export/report` | CSV write/read with metadata; stdout summary |
-| `apps/seedfinder/main.cpp` | Wiring: parse, validate, scan or re-filter, report |
+| `apps/seedtracker/main.cpp` | Wiring: parse, validate, scan or re-filter, report |
 | `scripts/parity.sh` | Compares the new tool with the legacy one, and the GPU backend with the CPU backend |
 
 ## How the random logic works
@@ -78,7 +78,7 @@ The GPU is an exact prefilter, not a second implementation of the output. One wo
 - **Batches:** seeds go to the GPU in batches while the previous batch is re-checked on the CPU threads. If a batch finds more hits than the hit buffer holds (2^22), it is rerun as two halves, so no hit is dropped.
 - **Invalid events:** the kernel counts them the way the CPU does, so the `invalid events` line matches.
 - **Short window:** the CPU sizes its draw window for the worst case (a `dist-*` pick may read 64 words, a reroll event 64 picks). The kernel fills only what events usually use: 5 picks per event (24 for reroll) times `--rng-step`, plus the offsets and gaps. If an event in some seed runs past that, the kernel cannot tell a real cap from a cut-off window, so it hands that seed to the CPU, which settles it, including its invalid-event count. With the full window, `dist-gcc10` over 16M seeds measured 59 s on the GPU; with the short window it measured 0.7 s (Intel UHD Graphics).
-- **GPU window limit:** the kernel builds the draws from the first init words of the Mersenne Twister without the 624-word state (`sf_seed_fill_lazy`). That works only for a short window: at most 226 draws for `high31`, `low31` and raw words, and 96 for `reject31` (about half of its words are dropped). Beyond that the kernel would need the full state in each work-item's private memory. On the one GPU tested (Intel UHD Graphics, 23 compute units) that measured 2.3x to 3x slower than 8 CPU threads (window 311: 2.4 s against 1.0 s on 2M seeds; window 3011: 16.8 s against 6.4 s). Over the limit, `auto` uses the CPU with a note and `opencl` fails. The window is `offset_end + sum of later gap maxima + events x slots per event`, so the limit mostly restricts `--offset-end` and gap widths: for large offsets, use the CPU backend. The limits are in `include/seedfinder/compute/opencl_scanner.hpp`.
+- **GPU window limit:** the kernel builds the draws from the first init words of the Mersenne Twister without the 624-word state (`sf_seed_fill_lazy`). That works only for a short window: at most 226 draws for `high31`, `low31` and raw words, and 96 for `reject31` (about half of its words are dropped). Beyond that the kernel would need the full state in each work-item's private memory. On the one GPU tested (Intel UHD Graphics, 23 compute units) that measured 2.3x to 3x slower than 8 CPU threads (window 311: 2.4 s against 1.0 s on 2M seeds; window 3011: 16.8 s against 6.4 s). Over the limit, `auto` uses the CPU with a note and `opencl` fails. The window is `offset_end + sum of later gap maxima + events x slots per event`, so the limit mostly restricts `--offset-end` and gap widths: for large offsets, use the CPU backend. The limits are in `include/seedtracker/compute/opencl_scanner.hpp`.
 - **Device choice:** a discrete GPU if there is one, otherwise the integrated one (compute units times clock breaks ties). The report shows which.
 
 ## Observation log (`--obs FILE`)

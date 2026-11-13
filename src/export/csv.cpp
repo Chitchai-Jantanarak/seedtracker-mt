@@ -1,4 +1,4 @@
-#include "seedfinder/export/csv.hpp"
+#include "seedtracker/export/csv.hpp"
 
 #include <charconv>
 #include <cstdio>
@@ -8,10 +8,10 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "seedfinder/compute/volatility.hpp"
-#include "seedfinder/logs/observation_log.hpp"
+#include "seedtracker/compute/volatility.hpp"
+#include "seedtracker/logs/observation_log.hpp"
 
-namespace seedfinder {
+namespace seedtracker {
 
 namespace {
 
@@ -251,4 +251,4 @@ std::vector<std::string> read_csv(const std::string& path, const Options& opt,
     return warnings;
 }
 
-}  // namespace seedfinder
+}  // namespace seedtracker

@@ -1,4 +1,4 @@
-#include "seedfinder/config/cli.hpp"
+#include "seedtracker/config/cli.hpp"
 
 #include <cstdint>
 #include <limits>
@@ -6,9 +6,9 @@
 #include <stdexcept>
 #include <string>
 
-#include "seedfinder/logs/observation_log.hpp"
+#include "seedtracker/logs/observation_log.hpp"
 
-namespace seedfinder {
+namespace seedtracker {
 
 namespace {
 
@@ -231,4 +231,4 @@ void usage(std::ostream& os, const char* argv0) {
         "      --csv-out chain.csv\n";
 }
 
-}  // namespace seedfinder
+}  // namespace seedtracker

@@ -40,7 +40,7 @@
  *   SF_K_PREFIX_LEN_INIT, SF_K_PREFIX_INIT          per-event post-rule prefix
  *   SF_K_SURVIVOR_INIT, SF_K_EXCLUDE_INIT           per-event survivor and exclude mask
  */
-#include "seedfinder/core/sim_core.h"
+#include "seedtracker/core/sim_core.h"
 
 __constant uint sf_k_gap_min[SF_K_EVENTS] = SF_K_GAP_MIN_INIT;
 __constant uint sf_k_gap_max[SF_K_EVENTS] = SF_K_GAP_MAX_INIT;

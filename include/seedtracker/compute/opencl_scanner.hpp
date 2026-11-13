@@ -11,13 +11,13 @@
 // never dropped. While the host re-checks batch i, the GPU already runs i+1.
 //
 // This header has no OpenCL types, so it compiles without the CL headers; the
-// implementation is only built with SEEDFINDER_OPENCL.
+// implementation is only built with SEEDTRACKER_OPENCL.
 #include <memory>
 #include <string>
 
-#include "seedfinder/compute/backend.hpp"
+#include "seedtracker/compute/backend.hpp"
 
-namespace seedfinder {
+namespace seedtracker {
 
 // Draws the kernel fills per seed. The CPU window is sized for the worst case
 // (64 words per dist pick, 64 picks per reroll event); the GPU fills only what
@@ -57,4 +57,4 @@ private:
     std::unique_ptr<Impl> impl_;
 };
 
-}  // namespace seedfinder
+}  // namespace seedtracker

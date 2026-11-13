@@ -1,11 +1,11 @@
-#include "seedfinder/logs/observation_log.hpp"
+#include "seedtracker/logs/observation_log.hpp"
 
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
 #include <utility>
 
-namespace seedfinder {
+namespace seedtracker {
 
 namespace {
 
@@ -210,4 +210,4 @@ std::string summarize_observations(const std::vector<Observation>& obs) {
     return out;
 }
 
-}  // namespace seedfinder
+}  // namespace seedtracker

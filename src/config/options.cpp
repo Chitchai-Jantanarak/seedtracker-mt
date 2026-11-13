@@ -1,10 +1,10 @@
-#include "seedfinder/config/options.hpp"
+#include "seedtracker/config/options.hpp"
 
 #include <cstdint>
 #include <filesystem>
 #include <stdexcept>
 
-namespace seedfinder {
+namespace seedtracker {
 
 const PostRule& predicted_rule(const Options& opt) { return opt.observations.back().rule; }
 
@@ -107,4 +107,4 @@ std::vector<std::string> validate(Options& opt) {
     return warnings;
 }
 
-}  // namespace seedfinder
+}  // namespace seedtracker

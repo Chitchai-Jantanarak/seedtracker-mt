@@ -5,11 +5,11 @@
 #include <cstdint>
 #include <vector>
 
-#include "seedfinder/core/sim_core.h"
-#include "seedfinder/rng/engine.hpp"
-#include "seedfinder/types.hpp"
+#include "seedtracker/core/sim_core.h"
+#include "seedtracker/rng/engine.hpp"
+#include "seedtracker/types.hpp"
 
-namespace seedfinder {
+namespace seedtracker {
 
 class DrawBuffer {
 public:
@@ -34,4 +34,4 @@ private:
     sf_mt_state state_{};
 };
 
-}  // namespace seedfinder
+}  // namespace seedtracker

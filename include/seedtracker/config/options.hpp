@@ -8,9 +8,9 @@
 #include <thread>
 #include <vector>
 
-#include "seedfinder/types.hpp"
+#include "seedtracker/types.hpp"
 
-namespace seedfinder {
+namespace seedtracker {
 
 // Values the pick rules would otherwise recompute on every draw.
 struct PickContext {
@@ -97,4 +97,4 @@ uint64_t max_slots_per_event(const Options& opt);
 // Never undersized in normal runs; 0 if it would exceed kMaxWindow.
 uint64_t draw_window(const Options& opt);
 
-}  // namespace seedfinder
+}  // namespace seedtracker

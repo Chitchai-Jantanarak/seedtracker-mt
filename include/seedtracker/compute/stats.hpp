@@ -6,10 +6,10 @@
 #include <cstdint>
 #include <vector>
 
-#include "seedfinder/config/options.hpp"
-#include "seedfinder/types.hpp"
+#include "seedtracker/config/options.hpp"
+#include "seedtracker/types.hpp"
 
-namespace seedfinder {
+namespace seedtracker {
 
 struct Stats {
     uint64_t matches = 0;
@@ -30,4 +30,4 @@ void stats_merge(Stats& dst, const Stats& src, const Options& opt);
 // Sorts and trims the example lists so output is independent of thread timing.
 void stats_finalize(Stats& s, const Options& opt);
 
-}  // namespace seedfinder
+}  // namespace seedtracker

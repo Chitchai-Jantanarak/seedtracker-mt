@@ -12,8 +12,8 @@
  * Draw buffers: callers precompute rnd() outputs [0, W) for one seed once, then
  * every offset, gap and event reads from that buffer.
  */
-#ifndef SEEDFINDER_CORE_SIM_CORE_H
-#define SEEDFINDER_CORE_SIM_CORE_H
+#ifndef SEEDTRACKER_CORE_SIM_CORE_H
+#define SEEDTRACKER_CORE_SIM_CORE_H
 
 #ifdef __OPENCL_C_VERSION__
 typedef uint uint32_t;
@@ -377,4 +377,4 @@ SF_INLINE void sf_step_event(SF_PRIVATE const uint32_t* buf, uint32_t W, uint32_
     out->valid = 1;
 }
 
-#endif /* SEEDFINDER_CORE_SIM_CORE_H */
+#endif /* SEEDTRACKER_CORE_SIM_CORE_H */

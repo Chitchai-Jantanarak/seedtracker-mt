@@ -1,14 +1,14 @@
-#include "seedfinder/compute/backend_select.hpp"
+#include "seedtracker/compute/backend_select.hpp"
 
 #include <stdexcept>
 
-#include "seedfinder/compute/cpu_scanner.hpp"
-#ifdef SEEDFINDER_HAVE_OPENCL
-#include "seedfinder/compute/opencl_scanner.hpp"
-#include "seedfinder/rng/mapping_probe.hpp"
+#include "seedtracker/compute/cpu_scanner.hpp"
+#ifdef SEEDTRACKER_HAVE_OPENCL
+#include "seedtracker/compute/opencl_scanner.hpp"
+#include "seedtracker/rng/mapping_probe.hpp"
 #endif
 
-namespace seedfinder {
+namespace seedtracker {
 
 namespace {
 
@@ -27,10 +27,10 @@ BackendSelection select_backend(Options& opt) {
     if (opt.backend == Backend::Cpu) {
         sel = use_cpu(opt);
     } else {
-#ifndef SEEDFINDER_HAVE_OPENCL
+#ifndef SEEDTRACKER_HAVE_OPENCL
         if (opt.backend == Backend::OpenCL) {
             throw std::runtime_error(
-                "--backend opencl: built without OpenCL (configure with -DSEEDFINDER_OPENCL=ON, "
+                "--backend opencl: built without OpenCL (configure with -DSEEDTRACKER_OPENCL=ON, "
                 "preset mingw-release-opencl)");
         }
         sel = use_cpu(opt);  // auto in a CPU-only build is simply cpu
@@ -72,4 +72,4 @@ BackendSelection select_backend(Options& opt) {
     return sel;
 }
 
-}  // namespace seedfinder
+}  // namespace seedtracker

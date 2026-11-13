@@ -1,4 +1,4 @@
-#include "seedfinder/compute/cpu_scanner.hpp"
+#include "seedtracker/compute/cpu_scanner.hpp"
 
 #include <algorithm>
 #include <atomic>
@@ -8,10 +8,10 @@
 #include <thread>
 #include <vector>
 
-#include "seedfinder/compute/chain.hpp"
-#include "seedfinder/rng/draw_buffer.hpp"
+#include "seedtracker/compute/chain.hpp"
+#include "seedtracker/rng/draw_buffer.hpp"
 
-namespace seedfinder {
+namespace seedtracker {
 
 namespace {
 
@@ -37,7 +37,7 @@ void worker(const Options& opt, CsvWriter* csv, std::atomic<uint64_t>& next_chun
             // FORMAT GUARANTEE, do not move this flush into on_hit or any
             // per-row path: flushing only between seeds makes all rows of one
             // (seed, offset, earlier gaps) group reach the file as one contiguous
-            // run. filter_csv (apps/seedfinder/main.cpp) depends on this to
+            // run. filter_csv (apps/seedtracker/main.cpp) depends on this to
             // recompute volatility group by group while streaming.
             if (csv && rows.size() > kCsvFlushBytes) {
                 csv->write_block(rows);
@@ -91,4 +91,4 @@ Stats CpuScanner::scan(const Options& opt, CsvWriter* csv) {
     return all;
 }
 
-}  // namespace seedfinder
+}  // namespace seedtracker

@@ -1,4 +1,4 @@
-#include "seedfinder/compute/opencl_scanner.hpp"
+#include "seedtracker/compute/opencl_scanner.hpp"
 
 #include <CL/cl.h>
 
@@ -14,10 +14,10 @@
 #include <thread>
 #include <vector>
 
-#include "seedfinder/compute/chain.hpp"
-#include "seedfinder/kernel_source.hpp"
-#include "seedfinder/rng/draw_buffer.hpp"
-#include "seedfinder/rules/model.hpp"
+#include "seedtracker/compute/chain.hpp"
+#include "seedtracker/kernel_source.hpp"
+#include "seedtracker/rng/draw_buffer.hpp"
+#include "seedtracker/rules/model.hpp"
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -26,7 +26,7 @@
 #include <dlfcn.h>
 #endif
 
-namespace seedfinder {
+namespace seedtracker {
 
 namespace {
 
@@ -235,7 +235,7 @@ std::string build_prelude(const Options& opt, Mapping gpu_mapping) {
 // prelude + sim_core.h + scan.cl, with scan.cl's #include line replaced by the header text.
 std::string build_source(const Options& opt, Mapping gpu_mapping) {
     std::string kernel = kScanKernelSource;
-    const std::string include_line = "#include \"seedfinder/core/sim_core.h\"";
+    const std::string include_line = "#include \"seedtracker/core/sim_core.h\"";
     const std::size_t at = kernel.find(include_line);
     if (at == std::string::npos) throw std::runtime_error("scan.cl lost its sim_core.h include line");
     kernel.replace(at, include_line.size(), kSimCoreSource);
@@ -656,4 +656,4 @@ std::unique_ptr<OpenClScanner> OpenClScanner::create(const Options& opt, Mapping
         return all;
     }
 
-    }  // namespace seedfinder
+    }  // namespace seedtracker

@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <vector>
 
-namespace seedfinder {
+namespace seedtracker {
 
 struct PostRule {
     std::vector<int> prefix;  // known leading eliminations (1..6), may be empty or partial
@@ -31,4 +31,4 @@ inline bool rule_matches(const PostRule& r, const E* elim, int survivor) {
     return true;
 }
 
-}  // namespace seedfinder
+}  // namespace seedtracker

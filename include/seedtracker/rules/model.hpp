@@ -2,11 +2,11 @@
 // C++ view of the elimination models (remaining, swapremove, reroll, shuffle).
 // The models live in core/sim_core.h; this file builds the sim parameters from
 // Options and wraps one event step.
-#include "seedfinder/config/options.hpp"
-#include "seedfinder/core/sim_core.h"
-#include "seedfinder/rules/pick.hpp"
+#include "seedtracker/config/options.hpp"
+#include "seedtracker/core/sim_core.h"
+#include "seedtracker/rules/pick.hpp"
 
-namespace seedfinder {
+namespace seedtracker {
 
 inline int sim_model(Model m) {
     switch (m) {
@@ -35,4 +35,4 @@ inline sf_event simulate_event(const uint32_t* buf, uint32_t size, uint32_t pos,
     return ev;
 }
 
-}  // namespace seedfinder
+}  // namespace seedtracker

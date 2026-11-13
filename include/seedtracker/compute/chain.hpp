@@ -10,14 +10,14 @@
 #include <cstdint>
 #include <vector>
 
-#include "seedfinder/compute/volatility.hpp"
-#include "seedfinder/config/options.hpp"
-#include "seedfinder/core/sim_core.h"
-#include "seedfinder/post/rules.hpp"
-#include "seedfinder/rules/model.hpp"
-#include "seedfinder/types.hpp"
+#include "seedtracker/compute/volatility.hpp"
+#include "seedtracker/config/options.hpp"
+#include "seedtracker/core/sim_core.h"
+#include "seedtracker/post/rules.hpp"
+#include "seedtracker/rules/model.hpp"
+#include "seedtracker/types.hpp"
 
-namespace seedfinder {
+namespace seedtracker {
 
 // One matcher per worker thread (it owns scratch buffers). Requires validate().
 class ChainMatcher {
@@ -133,4 +133,4 @@ private:
 std::vector<Observation> simulate_chain(const Options& opt, uint32_t seed, uint64_t offset,
                                         const std::vector<uint32_t>& gaps);
 
-}  // namespace seedfinder
+}  // namespace seedtracker

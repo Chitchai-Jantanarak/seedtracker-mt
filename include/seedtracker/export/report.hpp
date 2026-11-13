@@ -4,11 +4,11 @@
 // logs) the volatility tables.
 #include <iosfwd>
 
-#include "seedfinder/compute/stats.hpp"
-#include "seedfinder/config/options.hpp"
+#include "seedtracker/compute/stats.hpp"
+#include "seedtracker/config/options.hpp"
 
-namespace seedfinder {
+namespace seedtracker {
 
 void print_stats(std::ostream& os, const Stats& s, const Options& opt);
 
-}  // namespace seedfinder
+}  // namespace seedtracker

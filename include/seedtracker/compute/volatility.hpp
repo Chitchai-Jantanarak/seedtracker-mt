@@ -16,7 +16,7 @@
 #include <cstdint>
 #include <vector>
 
-namespace seedfinder {
+namespace seedtracker {
 
 constexpr unsigned kWeightBits = 20;  // fixed-point scale of ChainHit::weight_q
 
@@ -51,4 +51,4 @@ struct VolatilityScore {
 // `keys` holds one prediction key per matching gap (non-empty). Sorts it in place.
 VolatilityScore score_predictions(std::vector<uint32_t>& keys);
 
-}  // namespace seedfinder
+}  // namespace seedtracker
