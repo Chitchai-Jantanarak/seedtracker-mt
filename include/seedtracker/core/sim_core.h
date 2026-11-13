@@ -51,6 +51,7 @@ typedef ulong uint64_t;
 #define SF_MODEL_REROLL 1
 #define SF_MODEL_SWAPREMOVE 2
 #define SF_MODEL_SHUFFLE 3
+#define SF_MODEL_ROLL 4 /* independent picks of 1..6, no survivor */
 
 #define SF_REROLL_MAX_PICKS 64u /* reroll model: more picks than this marks the event invalid */
 #define SF_DIST_MAX_WORDS 64u   /* dist picks: more rejected engine words than this marks the event invalid */
@@ -357,6 +358,12 @@ SF_INLINE void sf_step_event(SF_PRIVATE const uint32_t* buf, uint32_t W, uint32_
                 out->survivor = i;
                 break;
             }
+        }
+    } else if (p->model == SF_MODEL_ROLL) {
+        for (i = 0; i < 5; ++i) {
+            int idx = sf_pick(buf, W, &cur, p, 6, &ok);
+            if (!ok) return;
+            out->elim[i] = idx + 1;
         }
     } else {
         /* SF_MODEL_SHUFFLE: Fisher-Yates, first five slots are the elimination order. */

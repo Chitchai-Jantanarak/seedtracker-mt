@@ -14,7 +14,9 @@ enum class Mapping { StdDistribution, High31, Low31, Reject31, Raw };
 // Which engine runs the scan. Auto picks OpenCL when it is built in, a GPU
 // initialises and the options fit; otherwise the CPU thread pool.
 enum class Backend { Auto, OpenCL, Cpu };
-enum class Model { RemainingErase, RerollUnique, SwapRemove, FisherYates };
+enum class Model { RemainingErase, RerollUnique, SwapRemove, FisherYates, IndependentRoll };
+// Every model except roll eliminates five distinct rooms and leaves one survivor.
+inline bool model_eliminates(Model m) { return m != Model::IndependentRoll; }
 enum class PickRule {
     DirectRemaining,  // script_rand(0, choices-1)
     FixedModulo,      // script_rand(base_min, base_max), then modulo choices
@@ -49,6 +51,7 @@ inline const char* model_name(Model m) {
         case Model::RerollUnique: return "reroll";
         case Model::SwapRemove: return "swapremove";
         case Model::FisherYates: return "shuffle";
+        case Model::IndependentRoll: return "roll";
     }
     return "?";
 }

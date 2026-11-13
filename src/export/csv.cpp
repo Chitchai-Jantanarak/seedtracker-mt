@@ -101,8 +101,8 @@ ChainHit parse_row(const std::string& line, const std::string& path, std::size_t
         }
         h.elim[i] = static_cast<uint8_t>(v);
     }
-    if (!parse_uint(f[e0 + 5], v) || v < 1 || v > 6) {
-        row_error(path, line_no, "survivor must be 1..6, got '" + f[e0 + 5] + "'");
+    if (!parse_uint(f[e0 + 5], v) || v > 6) {  // 0 under --model roll
+        row_error(path, line_no, "survivor must be 0..6, got '" + f[e0 + 5] + "'");
     }
     h.survivor = static_cast<uint8_t>(v);
 

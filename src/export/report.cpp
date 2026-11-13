@@ -44,7 +44,7 @@ void print_hit(std::ostream& os, const ChainHit& c, bool with_volatility) {
         if (i) os << '-';
         os << static_cast<int>(c.elim[i]);
     }
-    os << " survivor=" << static_cast<int>(c.survivor);
+    if (c.survivor) os << " survivor=" << static_cast<int>(c.survivor);
     if (with_volatility) os << " volatility=" << c.volatility;
     os << '\n';
 }
@@ -80,7 +80,8 @@ void print_stats(std::ostream& os, const Stats& s, const Options& opt) {
     for (int d = 0; d < opt.depth; ++d) {
         const std::size_t pos = prefix_len + static_cast<std::size_t>(d);
         if (pos >= 5) break;
-        os << "\nNext depth " << (d + 1) << " (elimination #" << (pos + 1) << "):\n";
+        os << "\nNext depth " << (d + 1) << " (" << (model_eliminates(opt.model) ? "elimination" : "roll")
+           << " #" << (pos + 1) << "):\n";
         std::vector<std::pair<int, uint64_t>> vv;
         for (int v = 1; v <= 6; ++v) {
             const uint64_t n = s.depth_counts[static_cast<std::size_t>(d)][static_cast<std::size_t>(v)];
@@ -95,7 +96,6 @@ void print_stats(std::ostream& os, const Stats& s, const Options& opt) {
         }
     }
 
-    os << "\nSurvivor distribution:\n";
     std::vector<std::pair<int, uint64_t>> sv;
     for (int v = 1; v <= 6; ++v) {
         if (s.survivor_counts[static_cast<std::size_t>(v)]) {
@@ -105,6 +105,7 @@ void print_stats(std::ostream& os, const Stats& s, const Options& opt) {
     std::sort(sv.begin(), sv.end(), [](const auto& a, const auto& b) {
         return a.second != b.second ? a.second > b.second : a.first < b.first;
     });
+    if (!sv.empty()) os << "\nSurvivor distribution:\n";
     for (const auto& [v, n] : sv) {
         os << "  " << v << " : " << (100.0 * static_cast<double>(n) / static_cast<double>(s.matches)) << "% (" << n
            << ")\n";

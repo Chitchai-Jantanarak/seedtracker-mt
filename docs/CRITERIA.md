@@ -68,6 +68,7 @@ The fixed-domain defaults are `--base-min 1 --base-max 10000 --value-step 1`, wh
 | `swapremove` | Same, but the last choice moves into the picked slot. |
 | `reroll` | Pick from all six; redraw until the choice is still open. Capped at 64 picks per event, after which the event counts as invalid. |
 | `shuffle` | Fisher-Yates shuffle of all six. The first five are the order. |
+| `roll` | Independent picks from all six (`rand() % 6 + 1`); values repeat, no survivor. Log a long run as 5-value `event` lines with no `gap` between them. |
 
 ---
 

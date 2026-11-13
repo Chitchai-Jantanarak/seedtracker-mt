@@ -14,6 +14,7 @@ inline int sim_model(Model m) {
         case Model::RerollUnique: return SF_MODEL_REROLL;
         case Model::SwapRemove: return SF_MODEL_SWAPREMOVE;
         case Model::FisherYates: return SF_MODEL_SHUFFLE;
+        case Model::IndependentRoll: return SF_MODEL_ROLL;
     }
     return SF_MODEL_REMAINING;
 }

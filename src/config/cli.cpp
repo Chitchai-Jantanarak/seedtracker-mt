@@ -74,6 +74,7 @@ Model parse_model(const std::string& s) {
     if (s == "reroll") return Model::RerollUnique;
     if (s == "swapremove") return Model::SwapRemove;
     if (s == "shuffle") return Model::FisherYates;
+    if (s == "roll") return Model::IndependentRoll;
     throw std::runtime_error("unknown model: " + s);
 }
 
@@ -194,7 +195,8 @@ void usage(std::ostream& os, const char* argv0) {
         "  --calib 5,1,2        observed elimination prefix (one event)\n"
         "  --obs FILE           several logged events with unknown rnd() gaps (see README)\n"
         "  --depth N            aggregate N future eliminations (default 3)\n"
-        "  --model remaining|reroll|swapremove|shuffle\n"
+        "  --model remaining|reroll|swapremove|shuffle|roll\n"
+        "                       roll: independent rand() % 6 + 1 values\n"
         "  --mapping std|high31|low31|reject31\n"
         "  --pick direct|fixed-mod|fixed-scale|dist-gcc10|dist-gcc11\n"
         "                       how each random draw maps to available choices;\n"
