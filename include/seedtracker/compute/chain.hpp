@@ -64,7 +64,7 @@ private:
             ++invalid_;
             return;
         }
-        if (!rule_matches(steps_[k].rule, ev.elim, ev.survivor)) return;
+        if (!rule_matches(steps_[k].rule, ev.elim)) return;
         if (k + 1 == steps_.size()) {  // single event: no gap, volatility 0
             emit(make_hit(ev));
             return;
@@ -93,7 +93,7 @@ private:
                 ++invalid_;
                 continue;
             }
-            if (!rule_matches(last.rule, ev.elim, ev.survivor)) continue;
+            if (!rule_matches(last.rule, ev.elim)) continue;
             matches_.push_back({g, ev});
             keys_.push_back(prediction_key(ev.elim, prefix_len_, depth_));
         }

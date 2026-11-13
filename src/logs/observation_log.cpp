@@ -112,19 +112,14 @@ std::vector<Observation> parse_observation_text(const std::string& text, const s
                 try {
                     if (eq == std::string::npos) {
                         if (!first) throw std::runtime_error("unexpected token '" + tok + "'");
-                        o.rule.prefix = parse_room_list(tok, "elimination list", 5);
+                        o.rule.prefix = parse_room_list(tok, "event list", 5);
                     } else {
                         const std::string key = tok.substr(0, eq);
-                        const std::string val = tok.substr(eq + 1);
-                        if (key == "survivor") {
-                            const std::vector<int> v = parse_room_list(val, "survivor", 1);
-                            if (v.size() != 1) throw std::runtime_error("survivor needs one room");
-                            o.rule.survivor = v[0];
-                        } else if (key == "exclude") {
-                            for (int r : parse_room_list(val, "exclude", 5)) o.rule.exclude_mask |= 1u << r;
-                        } else {
-                            throw std::runtime_error("unknown key '" + key + "'");
-                        }
+                        unsigned* mask = key == "include"   ? &o.rule.include_mask
+                                         : key == "exclude" ? &o.rule.exclude_mask
+                                                            : nullptr;
+                        if (!mask) throw std::runtime_error("unknown key '" + key + "' (expected include= or exclude=)");
+                        for (int v : parse_room_list(tok.substr(eq + 1), key, 5)) *mask |= 1u << v;
                     }
                 } catch (const std::exception& e) {
                     fail(name, line_no, e.what());
@@ -165,12 +160,12 @@ std::string list_text(const std::vector<int>& v) {
     return s;
 }
 
-std::string exclude_text(unsigned mask) {
+std::string mask_text(unsigned mask) {
     std::string s;
-    for (int r = 1; r <= 6; ++r) {
-        if (mask & (1u << r)) {
+    for (int v = 1; v <= 6; ++v) {
+        if (mask & (1u << v)) {
             if (!s.empty()) s += ',';
-            s += std::to_string(r);
+            s += std::to_string(v);
         }
     }
     return s;
@@ -189,23 +184,23 @@ std::string format_observation_log(const std::vector<Observation>& obs) {
         if (i) out += "gap " + gap_text(obs[i]) + "\n";
         out += "event";
         if (!obs[i].rule.prefix.empty()) out += " " + list_text(obs[i].rule.prefix);
-        if (obs[i].rule.survivor) out += " survivor=" + std::to_string(obs[i].rule.survivor);
-        if (obs[i].rule.exclude_mask) out += " exclude=" + exclude_text(obs[i].rule.exclude_mask);
+        if (obs[i].rule.include_mask) out += " include=" + mask_text(obs[i].rule.include_mask);
+        if (obs[i].rule.exclude_mask) out += " exclude=" + mask_text(obs[i].rule.exclude_mask);
         out += "\n";
     }
     return out;
 }
 
 std::string summarize_observations(const std::vector<Observation>& obs) {
-    if (obs.size() == 1 && obs[0].rule.survivor == 0 && obs[0].rule.exclude_mask == 0) {
+    if (obs.size() == 1 && obs[0].rule.include_mask == 0 && obs[0].rule.exclude_mask == 0) {
         return obs[0].rule.prefix.empty() ? "(none)" : list_text(obs[0].rule.prefix);
     }
     std::string out;
     for (std::size_t i = 0; i < obs.size(); ++i) {
         if (i) out += "|g" + gap_text(obs[i]) + "|";
         out += obs[i].rule.prefix.empty() ? "-" : list_text(obs[i].rule.prefix);
-        if (obs[i].rule.survivor) out += "+s" + std::to_string(obs[i].rule.survivor);
-        if (obs[i].rule.exclude_mask) out += "+x" + exclude_text(obs[i].rule.exclude_mask);
+        if (obs[i].rule.include_mask) out += "+i" + mask_text(obs[i].rule.include_mask);
+        if (obs[i].rule.exclude_mask) out += "+x" + mask_text(obs[i].rule.exclude_mask);
     }
     return out;
 }

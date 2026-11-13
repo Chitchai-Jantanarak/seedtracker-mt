@@ -1,0 +1,10 @@
+# One 5-roll event per day, with other rnd() calls in between that are only roughly known.
+#
+#   seedtracker --model roll --mapping high31 --seed-end 1000 --offset-end 16 --obs examples/roll-daily-gaps.txt
+#
+# Expect: seed=42 offset=13 gaps=3-7, day 3 continues 1-3-3-6-5.
+event 4,2,3,6,4
+gap 0..5
+event 5,1,6,6,1
+gap 5..10
+event 1,3

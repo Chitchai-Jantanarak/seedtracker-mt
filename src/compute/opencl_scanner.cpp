@@ -199,7 +199,7 @@ std::string join_values(const std::vector<std::string>& v) {
 std::string build_prelude(const Options& opt, Mapping gpu_mapping) {
     const sf_params p = make_sim_params(opt);
     const std::size_t n = opt.observations.size();
-    std::vector<std::string> gmin, gmax, plen, prefix, surv, excl;
+    std::vector<std::string> gmin, gmax, plen, prefix, incl, excl;
     for (std::size_t k = 0; k < n; ++k) {
         const Observation& o = opt.observations[k];
         gmin.push_back(std::to_string(k == 0 ? 0u : o.gap_min) + "u");
@@ -210,7 +210,7 @@ std::string build_prelude(const Options& opt, Mapping gpu_mapping) {
             elems.push_back(std::to_string(i < o.rule.prefix.size() ? o.rule.prefix[i] : 0));
         }
         prefix.push_back("{" + join_values(elems) + "}");
-        surv.push_back(std::to_string(o.rule.survivor));
+        incl.push_back(std::to_string(o.rule.include_mask) + "u");
         excl.push_back(std::to_string(o.rule.exclude_mask) + "u");
     }
     std::ostringstream o;
@@ -231,7 +231,7 @@ std::string build_prelude(const Options& opt, Mapping gpu_mapping) {
       << "#define SF_K_GAP_MAX_INIT {" << join_values(gmax) << "}\n"
       << "#define SF_K_PREFIX_LEN_INIT {" << join_values(plen) << "}\n"
       << "#define SF_K_PREFIX_INIT {" << join_values(prefix) << "}\n"
-      << "#define SF_K_SURVIVOR_INIT {" << join_values(surv) << "}\n"
+      << "#define SF_K_INCLUDE_INIT {" << join_values(incl) << "}\n"
       << "#define SF_K_EXCLUDE_INIT {" << join_values(excl) << "}\n";
     return o.str();
 }

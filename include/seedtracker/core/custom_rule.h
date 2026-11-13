@@ -59,7 +59,7 @@
 /*
  * 1 if the custom model eliminates five distinct rooms and leaves a survivor
  * (like remaining/shuffle), 0 if it is roll-like (values repeat, no survivor:
- * survivor=/exclude= are rejected and the CSV writes survivor 0).
+ * the CSV writes survivor 0).
  */
 #define SF_CUSTOM_ELIMINATES 1
 

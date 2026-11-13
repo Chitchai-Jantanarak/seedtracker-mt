@@ -55,7 +55,7 @@ Stats filter_csv(const Options& opt) {
         keys.clear();
         std::vector<ChainHit*> kept;
         for (ChainHit& h : group) {
-            if (!rule_matches(rule, h.elim.data(), h.survivor)) continue;
+            if (!rule_matches(rule, h.elim.data())) continue;
             kept.push_back(&h);
             keys.push_back(prediction_key(h.elim.data(), prefix_len, opt.depth));
         }

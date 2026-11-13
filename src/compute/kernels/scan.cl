@@ -39,7 +39,7 @@
  *   SF_K_OFFSET_BEGIN/END/STEP
  *   SF_K_GAP_MIN_INIT, SF_K_GAP_MAX_INIT            per-event gap range initialisers
  *   SF_K_PREFIX_LEN_INIT, SF_K_PREFIX_INIT          per-event post-rule prefix
- *   SF_K_SURVIVOR_INIT, SF_K_EXCLUDE_INIT           per-event survivor and exclude mask
+ *   SF_K_INCLUDE_INIT, SF_K_EXCLUDE_INIT            per-event include and exclude masks
  */
 #include "seedtracker/core/sim_core.h"
 
@@ -47,18 +47,21 @@ __constant uint sf_k_gap_min[SF_K_EVENTS] = SF_K_GAP_MIN_INIT;
 __constant uint sf_k_gap_max[SF_K_EVENTS] = SF_K_GAP_MAX_INIT;
 __constant int sf_k_prefix_len[SF_K_EVENTS] = SF_K_PREFIX_LEN_INIT;
 __constant int sf_k_prefix[SF_K_EVENTS][5] = SF_K_PREFIX_INIT;
-__constant int sf_k_survivor[SF_K_EVENTS] = SF_K_SURVIVOR_INIT;
+__constant uint sf_k_include[SF_K_EVENTS] = SF_K_INCLUDE_INIT;
 __constant uint sf_k_exclude[SF_K_EVENTS] = SF_K_EXCLUDE_INIT;
 
 /* Same predicate as rule_matches() in post/rules.hpp. */
 static inline int sf_k_match(int k, __private const sf_event* ev)
 {
     int i;
+    uint seen;
     for (i = 0; i < sf_k_prefix_len[k]; ++i) {
         if (ev->elim[i] != sf_k_prefix[k][i]) return 0;
     }
-    if (sf_k_survivor[k] != 0 && ev->survivor != sf_k_survivor[k]) return 0;
-    if (sf_k_exclude[k] & (1u << ev->survivor)) return 0;
+    seen = 0u;
+    for (i = 0; i < 5; ++i) seen |= 1u << ev->elim[i];
+    if ((seen & sf_k_include[k]) != sf_k_include[k]) return 0;
+    if (seen & sf_k_exclude[k]) return 0;
     return 1;
 }
 

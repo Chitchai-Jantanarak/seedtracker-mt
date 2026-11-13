@@ -1,0 +1,8 @@
+# Day 2 was not written down, only remembered: "there was a 5, and no 3".
+#
+#   seedtracker --model roll --mapping high31 --seed-end 1000 --offset-end 16 --obs examples/roll-include-exclude.txt
+#
+# Expect: seed=42 offset=13 (day 2 was really 2,6,1,5,1), next two rolls 3, 5.
+event 4,2,3,6,4
+event include=5 exclude=3
+event 6,6,1

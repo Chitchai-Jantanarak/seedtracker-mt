@@ -127,14 +127,23 @@ event 3
 
 | Line | Example input | Status | Meaning |
 | --- | --- | --- | --- |
-| `event LIST` | `event 5,1,2` | **REQUIRED** | values seen, `1`..`6`, up to five; a prefix is fine |
-| `survivor=N` | `survivor=4` | OPTIONAL | the one left, when known; only filters a partial list |
-| `exclude=A,B` | `exclude=2,6` | OPTIONAL | known NOT to be the survivor; only filters a partial list |
+| `event [LIST]` | `event 5,1,2` | **REQUIRED** | one line per event; LIST is the values seen, `1`..`6`, up to five (a prefix, or none) |
+| `include=A,B` | `include=5` | OPTIONAL | values that appear somewhere in the event's five |
+| `exclude=A,B` | `exclude=3` | OPTIONAL | values that appear nowhere in the event's five |
 | `gap N` / `gap A..B` | `gap 0..40` | OPTIONAL | `rnd()` calls before the next event; no line = 0 |
 | `# ...` | `# round 2` | OPTIONAL | comment |
 
 > [!IMPORTANT]
 > The **last** event is the one predicted. Max 8 events. `--calib` is a one-event shorthand; use it OR `--obs`, not both.
+
+More logs with known answers, each with its command at the top:
+
+| File | Shows |
+| --- | --- |
+| [`roll-run.txt`](examples/roll-run.txt) | 13 dice rolls in a row → seed 42 |
+| [`roll-daily-gaps.txt`](examples/roll-daily-gaps.txt) | daily rolls with roughly known gaps → seed 42 |
+| [`roll-include-exclude.txt`](examples/roll-include-exclude.txt) | a day only remembered as "a 5, no 3" → seed 42 |
+| [`elimination-partial.txt`](examples/elimination-partial.txt) | half-seen elimination round with `exclude=` → seed 777, plus one chance match |
 
 ---
 
