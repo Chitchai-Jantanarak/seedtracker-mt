@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 824 72" width="824" height="72" role="img" aria-labelledby="seedtracker-pipeline-dark-title seedtracker-pipeline-dark-desc" font-family="Inter, Geist, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <title id="seedtracker-pipeline-dark-title">How seedtracker finds a seed</title>
+  <desc id="seedtracker-pipeline-dark-desc">Seed to std::mt19937 to RULES to match against observed events to candidates.</desc>
+  <defs>
+    <marker id="seedtracker-pipeline-dark-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto"><path d="M1 1 L9 5 L1 9" fill="none" stroke="#bfc0c0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+  </defs>
+  <rect width="824" height="72" fill="#0d1117"/>
+  <line x1="140" y1="36" x2="178" y2="36" stroke="#bfc0c0" stroke-width="1.4" marker-end="url(#seedtracker-pipeline-dark-a)"/>
+  <line x1="308" y1="36" x2="346" y2="36" stroke="#bfc0c0" stroke-width="1.4" marker-end="url(#seedtracker-pipeline-dark-a)"/>
+  <line x1="476" y1="36" x2="514" y2="36" stroke="#bfc0c0" stroke-width="1.4" marker-end="url(#seedtracker-pipeline-dark-a)"/>
+  <line x1="644" y1="36" x2="682" y2="36" stroke="#bfc0c0" stroke-width="1.4" marker-end="url(#seedtracker-pipeline-dark-a)"/>
+  <rect x="12" y="16" width="128" height="40" rx="6" fill="#0d1117" stroke="#f5f5f5" stroke-width="1.2"/>
+  <text x="76" y="41" fill="#f5f5f5" font-size="14" font-weight="700" text-anchor="middle">Seed</text>
+  <rect x="180" y="16" width="128" height="40" rx="6" fill="#0d1117" stroke="#f5f5f5" stroke-width="1.2"/>
+  <text x="244" y="41" fill="#f5f5f5" font-size="14" font-weight="700" text-anchor="middle">std::mt19937</text>
+  <rect x="348" y="16" width="128" height="40" rx="6" fill="#0d1117" stroke="#f5f5f5" stroke-width="1.2" stroke-dasharray="6,4"/>
+  <text x="412" y="41" fill="#f5f5f5" font-size="14" font-weight="700" text-anchor="middle">RULES</text>
+  <rect x="516" y="16" width="128" height="40" rx="6" fill="#0d1117" stroke="#f5f5f5" stroke-width="1.2"/>
+  <text x="580" y="41" fill="#f5f5f5" font-size="14" font-weight="700" text-anchor="middle">Match</text>
+  <rect x="684" y="16" width="128" height="40" rx="6" fill="#0d1117" stroke="#f5f5f5" stroke-width="1.2"/>
+  <text x="748" y="41" fill="#f5f5f5" font-size="14" font-weight="700" text-anchor="middle">Candidates</text>
+</svg>
